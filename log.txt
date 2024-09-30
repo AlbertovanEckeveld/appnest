@@ -1,0 +1,11 @@
+"""
+
+Resultaten van het galgje spelletje:
+
+datum              ;  Naam gebruiker    ;  score 
+
+"""
+
+
+2024-09-24 09:17 - Alberto - 8/10 - Gelukt
+2024-09-24 09:19 - Alberto - 4/10 - Gelukt
