@@ -39,7 +39,7 @@ def getWillekeurigWoord(moeilijkheid):
     elif moeilijkheid == 2:
         length = 15
 
-    with open("woorden.txt", "r") as woord_in_bestand:
+    with open("../data/galgje/woorden.txt", "r") as woord_in_bestand:
         woorden = []
         for woord in woord_in_bestand:
             woord = woord.strip()
@@ -149,7 +149,7 @@ def log(content):
         content_log[1] = content_log[1] + " - Mislukt"
     else: content_log[1] = content_log[1] + " - Gelukt"
 
-    with open("log.txt", "a") as log:
+    with open("../data/galgje/log.txt", "a") as log:
         log.write(f"\n{datum} - {content_log[0]} - {content_log[1]}")
 
 log(main())
