@@ -1,155 +1,266 @@
-"""
-De requirements van galgje:
-
-Denk na over een goede structuur van je code. Maak gebruik van functies zoals in de les is uitgelegd.                               (Gedaan)
-Deze nieuwe kennis pas je ook toe in het eerder gemaakte nummer raad spel.                                                          (Gedaan)              
-Kies met behulp van de module random een woord uit een tekstbestand. Dit bestand maak jezelf en voeg je toe aan je project.         (Gedaan)
-Vraag de gebruiker om diens naam                                                                                                    (Gedaan)
-Bepaal hoe vaak de gebruiker mag raden                                                                                              (Gedaan)
-Geef terugkoppeling: wat is de status van het woord, welke letters zijn goed geraden, hoeveel keer mag de gebruiker nog raden?      (Gedaan)
-
-Nano XL:
-
-Categoriseer de te raden woorden op makkelijk, gemiddeld, moeilijk en laat de gebruiker hierin kiezen                               (Gedaan)
-Noteer in een tekstbestand de naam van de gebruiker, of de gebruiker het woord heeft geraden, het aantal keer raden en de datum     (Gedaan)
-
-"""
-
+import customtkinter as ctk
+from _datetime import datetime
 import random
-from datetime import datetime
 
-datum = datetime.now().strftime("%Y-%m-%d %H:%M")
-naam_gebruiker = input("Wat is je naam? ")
-geraden_letters = []
-aantal_pogingen = 10
+from main import GUI
 
-def getWillekeurigWoord(moeilijkheid):
-    """
-        args:
-            moeilijkheid:           int, 0 t/m 2
+class Galgje:
 
-        returns:
-            woord uit een lijst:    str met een woord
-    """
+#============= Initialiseren van de Galgje klas =============#
 
-    if moeilijkheid == 0:
-        length = 5
-    elif moeilijkheid == 1:
-        length = 10
-    elif moeilijkheid == 2:
-        length = 15
+    def __init__(self):
+        self.app = GUI().main()
+        self.app.title('AppNest - Galgje')
+        self.app.geometry('1200x800')
+        #self.app.protocol('WM_DELETE_WINDOW', self.close_window())
 
-    with open("../data/galgje/woorden.txt", "r") as woord_in_bestand:
-        woorden = []
-        for woord in woord_in_bestand:
-            woord = woord.strip()
+        self.datum = datetime.now().strftime("%Y-%m-%d %H:%M")
 
-            if length >= 15 and len(woord) >= 15:
-                woorden.append(woord)
-            elif 10 <= length < 15 and 10 <= len(woord) <= 15:
-                woorden.append(woord)
-            elif 0 < length < 10 and len(woord) < 10:
-                woorden.append(woord)
-        
-        return woorden[random.randrange(0, len(woorden))]
+        ctk.CTkLabel(self.app, text='Galgje', font=('Helvetica', 30)).pack(pady=10)
 
-woord = getWillekeurigWoord(int(input("Op welke moelijkheid wil je het spelen? Makkelijk = 0, Gemiddeld = 1 en Moelijk = 2 ")))
+        self.difficulty_easy = 'easy'
+        self.difficulty_medium = 'medium'
+        self.difficulty_difficult = 'difficult'
+        self.difficulty = ''
 
-def GetWoordStatus(woord, geraden_letters):
-    """
-        args:
-            woord:              str met 1 letter of een woord
-            geraden_letters:    lijst met door de gebruiker geraden letters
+        self.username = ''
+        self.attempts = 0
+        self.max_attempts = 10
+        self.guessed_letters = []
+        self.word = ''
 
-        returns:
-            status van woord van de geraden letters: str met letters en lage streepjes.
-    """
+        self.start_window()
 
-    tekst = ''
-    for letter in woord:
-        if letter in geraden_letters:
-            tekst = tekst + letter
-        else: 
-            tekst = tekst + "_"
-    
-    return tekst
 
-def getKeuzeGebruiker(poging):
-    """
-    args:
-        poging      str met 1 letter of een woord
+#============= Window logica =============#
 
-    returns:
-       -1          betekent geraden
-        0           betekent ongeldige input
-        1           betekent dubbel geraden letter
-        anders      betekent de status van het woord
-    """
 
-    if len(poging) == 1:
-        if poging in geraden_letters:
-            return 1
+    def start_window(self):
+        """
+        Deze methode laat de gebruiker een moeilijkheidsgraad kiezen
 
-        if poging in woord and not poging in geraden_letters and (poging != '' or  ' '):
-            geraden_letters.append(poging)
-            if len(geraden_letters) == len(woord) or GetWoordStatus(woord, geraden_letters) == woord:
-                return -1
-    else:
-        if poging == woord:
-            return -1
-        
-        return 0
-    
-    return GetWoordStatus(woord, geraden_letters)
+        param: Geen
+        return: Geen
+        """
 
-def main():
-    """
-        args:
-            None
+        self.clear_window()
 
-        returns:
-            resultaat gebruiker na spelen:  str met gebruiker en de aantal pogingen
-    """
-        
-    print(f"\nWelkom {naam_gebruiker}, leuk dat je galgje speelt.\nJe hebt in totaal {aantal_pogingen} pogingen om het woord te raden.")
-    print(GetWoordStatus(woord, geraden_letters))
-    for i in range(aantal_pogingen):
-        poging = getKeuzeGebruiker(input("\nDoe een gok: "))
-        
-        match poging:
-            case -1:
-                print((f"Je hebt het woord: {woord} goed geraden! Gefeliciteerd {naam_gebruiker}"))
-                return (f"{naam_gebruiker};{i+1}/{aantal_pogingen}")
-            case 0:
-                print("Kies 1 letter of probeer het woord te raden.")
-                poging = getKeuzeGebruiker(input("\nDoe opnieuw een gok: "))
-            case 1:
-                print("De letter heb je al geraden.")
-                poging = getKeuzeGebruiker(input("\nDoe opnieuw een gok: "))
+        username_entry = ctk.CTkEntry(self.app, font=('Helvetica', 15))
+        username_entry.pack(pady=10)
+        submit_username = ctk.CTkButton(self.app, text='Submit', font=('Helvetica', 15), command=lambda: self.get_username(username_entry.get()))
+        submit_username.pack(pady=5)
 
-        print("\n" + str(poging))
-        print(f"\nPogingen: {i+1} / {aantal_pogingen}")
-    
-    print(f"Helaas zit het spel er op, het woord was: {woord}")
-    return (f"{naam_gebruiker};{i+1}/{aantal_pogingen}")
-        
+        difficulties = [self.difficulty_easy, self.difficulty_medium, self.difficulty_difficult]
+        ctk.CTkLabel(self.app, text='Kies een moeilijkheidsgraad:', font=('Helvetica', 15)).pack(pady=10)
 
-def log(content):
-    """
-        args:
-            content:    str met 1 speler en resultaat
+        for difficulty in difficulties:
+            difficulty_button = ctk.CTkButton(self.app, text=difficulty.capitalize(), font=('Helvetica', 15), command=lambda m=difficulty: self.set_difficulty(m))
+            difficulty_button.pack(pady=5)
 
-        returns:
-            None
-    """
+        self.app.update()
 
-    content_log = content.split(";")
 
-    if content_log[1] == "10/10":
-        content_log[1] = content_log[1] + " - Mislukt"
-    else: content_log[1] = content_log[1] + " - Gelukt"
+    def go_back(self):
+        GUI().app.mainloop()
+        self.app.quit()
 
-    with open("../data/galgje/log.txt", "a") as log:
-        log.write(f"\n{datum} - {content_log[0]} - {content_log[1]}")
 
-log(main())
+    def clear_window(self):
+        for element in self.app.winfo_children()[1:]:
+            element.destroy()
+
+
+    def close_window(self):
+        self.app.quit()
+        exit()
+
+
+#============= spel logica =============#
+
+
+    def get_username(self, username):
+        self.username = username
+
+
+    def set_difficulty(self, difficulty):
+        """
+        Deze methode stel de moeilijkheidsgraad in
+
+        param moeilijkheidsgraad: str: De moeilijkheidsgraad gekozen door de gebruiker
+        return: Geen
+        """
+
+        self.difficulty = difficulty
+        self.word = self.get_word(self.difficulty)
+        self.attempts = 0
+        self.start_game()
+
+
+    def get_word(self, difficulty):
+        """
+        Deze methode pakt een willekeurig woord
+
+        param stop_getal: str: difficulty
+        return: str: een willekeurig woord
+        """
+
+        length = 0
+
+        if difficulty == self.difficulty_easy:
+            length = 5
+        elif difficulty == self.difficulty_medium:
+            length = 10
+        elif difficulty == self.difficulty_difficult:
+            length = 15
+        elif length == 0:
+            return
+        else: return
+
+
+
+        with open("data/galgje/woorden.txt", "r") as words_in_file:
+            words = []
+            for word in words_in_file:
+                woord = word.strip()
+
+                if length >= 15 and len(word) >= 15:
+                    words.append(woord)
+                elif 10 <= length < 15 and 10 <= len(word) <= 15:
+                    words.append(woord)
+                elif 0 < length < 10 and len(word) < 10:
+                    words.append(woord)
+
+            return words[random.randrange(0, len(words))]
+
+
+    def start_game(self):
+        """
+        Deze methode start het spel
+
+        param: Geen
+        return: Geen
+        """
+
+        self.clear_window()
+
+        ctk.CTkLabel(self.app, text=f'Speler: {self.username}', font=('Helvetica', 15)).pack(pady=5)
+        ctk.CTkLabel(self.app, text=f'Pogingen: {self.get_attempts_remaining()}', font=('Helvetica', 15)).pack(pady=5)
+        ctk.CTkLabel(self.app, text=f'Woord: {self.get_word_status()}', font=('Helvetica', 15)).pack(pady=5)
+
+        choice_text_field = ctk.CTkEntry(self.app, font=('Helvetica', 15))
+        choice_text_field.pack(pady=10)
+
+        choice_button = ctk.CTkButton(self.app, text='Raad', font=('Helvetica', 15), command=lambda: self.check_choice(choice_text_field.get()))
+        choice_button.pack()
+        self.app.update()
+
+
+    def get_attempts_remaining(self):
+        return f'{self.attempts} / {self.max_attempts}'
+
+
+    def get_word_status(self):
+        """
+        Krijg de status van het woord, met behulp van de geraden woorden lijst
+        en de lengte van het woord
+
+        param: Geen
+        return: str: status van het woord
+        """
+
+        text = ''
+        for letter in self.word:
+            if letter in self.guessed_letters:
+                text = text + letter
+            else:
+                text = text + "_"
+
+        return text
+
+
+    def check_choice(self, gok):
+        """
+        Deze methode controleert de gok van de gebruiker
+
+        param gok: str: de gok van de gebruiker
+        return: Geen
+        """
+
+        gok = str(gok).lower()
+
+        if gok in self.word and not gok in self.guessed_letters and (gok != '' or  ' '):
+            self.guessed_letters.append(gok)
+
+        self.attempts += 1
+
+        if gok == self.word or self.get_word_status() == self.word:
+            self.successfully_guessed()
+        elif self.attempts == self.max_attempts:
+            self.out_of_attempts()
+        else:
+            self.start_game()
+
+
+    def out_of_attempts(self):
+        """
+        Deze methode laat aan de gebruiker weten dat de gebruiker door zijn pogingen is
+
+        param: Geen
+        return: Geen
+        """
+
+        self.log(f'{self.username};{self.get_attempts_remaining()}')
+
+        self.clear_window()
+
+        ctk.CTkLabel(self.app, text=f'Helaas! Je bent door je pogingen heen.\n \n Het woord was: {self.word}', font=('Helvetica', 15), text_color='red').pack()
+
+        play_again_button = ctk.CTkButton(self.app, text='Speel opnieuw', font=('Helvetica', 15), command=lambda: self.start_game())
+        play_again_button.pack(pady=5)
+
+        go_back_button = ctk.CTkButton(self.app, text='Terug', font=('Helvetica', 15), command=lambda: self.go_back())
+        go_back_button.pack(pady=5)
+
+
+    def successfully_guessed(self):
+        """
+        Deze methode laat aan de gebruiker weten dat hij het getal geraden heeft
+
+        param: Geen
+        return: Geen
+        """
+
+        self.log(f'{self.username};{self.get_attempts_remaining()}')
+
+        self.clear_window()
+
+        ctk.CTkLabel(self.app, text='Gefeliciteerd! Je hebt het woord succesvol geraden.', font=('Helvetica', 15), text_color='green').pack()
+
+        play_again_button = ctk.CTkButton(self.app, text='Speel opnieuw', font=('Helvetica', 15), command=lambda: self.start_window())
+        play_again_button.pack(pady=5)
+
+        go_back_button = ctk.CTkButton(self.app, text='Terug', font=('Helvetica', 15), command=lambda: self.go_back())
+        go_back_button.pack(pady=5)
+
+
+    def log(self, content):
+        """
+        Deze methode logt de resultaten van de speler
+
+        param: content str: met 1 speler en resultaat
+        return: Geen
+        """
+
+        content_log = content.split(';')
+
+        if content_log[1] == '10/10':
+            content_log[1] = content_log[1] + ' - Mislukt'
+        else:
+            content_log[1] = content_log[1] + ' - Gelukt'
+
+        with open('data/galgje/log.txt', 'a') as log:
+            log.write(f'\n{self.datum} - {content_log[0]} - {content_log[1]}')
+
+
+if __name__ == '__main__':
+    GUI().app.mainloop()

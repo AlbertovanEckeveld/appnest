@@ -1,7 +1,7 @@
 # Nano Appstore: AppNest 🎮
 
 Welkom bij **AppNest**! Deze repository bevat een verzameling van eenvoudige minigames, gemaakt in Python. 
-Het doel van dit project is om leuke, korte spelletjes te bieden, ideaal om je Python-vaardigheden te verbeteren of gewoon voor wat ontspanning!
+Het doel van dit project was om python te leren, als verdieping heb ik het project in de OOP-structuur geprogrammeerd.
 
 
 ## Minigames:
@@ -9,4 +9,9 @@ Het doel van dit project is om leuke, korte spelletjes te bieden, ideaal om je P
 - Cijfer raadspel
 - Galgje
 - Dagboek
+
+
+## Technieken gebruikt:
+- Customtkinter
+- importlib
 

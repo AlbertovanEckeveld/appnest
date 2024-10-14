@@ -2,10 +2,11 @@
 
 Resultaten van het galgje spelletje:
 
-datum              ;  Naam gebruiker    ;  score 
+datum              ;  Naam gebruiker    ;  score
 
 """
 
-
-2024-09-24 09:17 - Alberto - 8/10 - Gelukt
-2024-09-24 09:19 - Alberto - 4/10 - Gelukt
+2024-10-14 12:32 - Alberto - 1 / 10 - Gelukt
+2024-10-14 12:46 - Alberto - 8 / 10 - Gelukt
+2024-10-14 13:11 - Alberto - 4 / 0 - Gelukt
+2024-10-14 13:15 - Alberto - 1 / 0 - Gelukt
