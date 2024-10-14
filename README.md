@@ -15,8 +15,3 @@ Het doel van dit project was om python te leren, als verdieping heb ik het proje
 - customtkinter
 - OOP
 
-
-## Technieken gebruikt:
-- Customtkinter
-- importlib
-
