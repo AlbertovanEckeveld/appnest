@@ -8,7 +8,12 @@ Het doel van dit project was om python te leren, als verdieping heb ik het proje
 
 - Cijfer raadspel
 - Galgje
-- Dagboek
+
+
+## Technieken toegepast:
+
+- customtkinter
+- OOP
 
 
 ## Technieken gebruikt:
