@@ -8,5 +8,10 @@ Het doel van dit project is om leuke, korte spelletjes te bieden, ideaal om je P
 
 - Cijfer raadspel
 - Galgje
-- Dagboek
+
+
+## Technieken toegepast:
+
+- customtkinter
+- OOP
 
